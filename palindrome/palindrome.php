@@ -49,4 +49,5 @@ else {
 	fwrite(STDOUT, "Bummer bro, looks like \"$input\" is not a palindrome." . PHP_EOL);
 }
 
+
 ?>
