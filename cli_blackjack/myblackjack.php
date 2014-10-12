@@ -68,6 +68,8 @@ function sortHand($hand) {
 // This function will accept a hand of cards, and return an integer value.
 function valueHand($hand, $firstOnly = false) {
 
+    // What if two aces dealt on the first hand?  Bug found.
+
     // Sort cards in player's hand, to calculate Ace last.
     $hand = sortHand($hand);
 
@@ -173,7 +175,6 @@ for ($i=1; $i <=2 ; $i++) {
 
 // Echo the dealer hand, only showing the first card
 echo "Dealer showing: {$dealerHand[0]}" . PHP_EOL;
-//echo "Value: " . valueHand($dealerHand) . PHP_EOL;
 
 // Echo player hand
 echo "You have " . showHand($playerHand) . PHP_EOL;
@@ -235,12 +236,14 @@ while (true) {
     // Clear screen
     echo exec('clear');
 
+    // If dealer has greater than 21; bust.
     if (valueHand($dealerHand) > 21) {
         echo "Dealer has " . showHand($dealerHand) . PHP_EOL;
         echo "Dealer Busted! You win!" . PHP_EOL;
         exit(0);
     }
 
+    // If dealer has 21; dealer wins.
     elseif (valueHand($dealerHand) == 21) {
         echo "Dealer has " . showHand($dealerHand) . PHP_EOL;
         echo "You have " . showHand($playerHand) . PHP_EOL;
@@ -257,9 +260,6 @@ while (true) {
 
     else {
 
-        // If count of player's cards are higher than dealer's cards, score being equal, player wins.
-
-        // Dealer stays; evaluate against value of player hand.
         if (valueHand($dealerHand) >= valueHand($playerHand) && count($dealerHand) >= count($playerHand)) {
             echo "Dealer has " . showHand($dealerHand) . PHP_EOL;
             echo "You have " . showHand($playerHand) . PHP_EOL;
