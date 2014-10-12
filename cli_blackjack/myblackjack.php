@@ -27,42 +27,6 @@ function buildDeck() {
     return $deck;
 }
 
-function valueCard($card) {
-
-    // Initialize value at zero.
-    $value = 0;
-
-    // Explode card string into array to get first word/num.
-    $cardArray = explode(' ', $card);
-    
-    // Overwrite $card to use first word/num.
-    $card = $cardArray[0];
-
-    // Use first word/num to establish card value.
-    switch ($card) {
-        case 'King':
-            $value = 10;
-            break;
-        case 'Queen':
-            $value = 10;
-            break;
-        case 'Jack':
-            $value = 10;
-            break;
-        case 'Ace':
-            // Save that for later.
-            break;
-        
-        default:
-            // For every other card, do this.
-            $value = intval($card);
-            break;
-    }
-
-    return $value;
-}
-
-
 // // This function will output a player's hand.
 // function echoHand($hand, $hidden = false) {
 
@@ -168,6 +132,7 @@ while ($choice != 'S') {
         exit(0);
     }
 
+    // Prompt User
     echo "(H)it or (S)tay? ";
     $choice = strtoupper(trim(fgets(STDIN)));
 
@@ -223,7 +188,7 @@ while (true) {
     }
 
     else {
-        
+
         // Dealer stays; evaluate against value of player hand.
         if (valueHand($dealerHand) >= valueHand($playerHand)) {
             echo "Dealer has " . valueHand($dealerHand) . " and you have " . valueHand($playerHand) . ". ";
