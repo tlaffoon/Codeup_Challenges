@@ -5,85 +5,123 @@
 
 // This function will build the deck.
 function buildDeck() {
-    
+
     // Create an array for suits
     $suits = ['Clubs', 'Hearts', 'Spades', 'Diamonds'];
 
     // Create an array for cards
     $cards = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King'];
 
-    foreach ($cards as $card) {
-        foreach ($suits as $suit) {
+    // Loop through each suit, and then each card per suit.
+    foreach ($suits as $suit) {
+        foreach ($cards as $card) {
             $deck[] = "$card of $suit";
         }
     }
 
-    // Shuffle the deck & return
-    shuffle($deck);
+    // Shuffle deck three times.
+    for ($i=1; $i <= 3 ; $i++) { 
+        shuffle($deck);
+    }
+
     return $deck;
 }
 
-// This function will output a player's hand.
-function echoHand($hand, $hidden = false) {
+function valueCard($card) {
 
-}
-
-// This function will calculate the value of a hand.
-function valueHand($hand) {
-
+    // Initialize value at zero.
     $value = 0;
 
-    foreach ($hand as $card) {
+    // Explode card string into array to get first word/num.
+    $cardArray = explode(' ', $card);
+    
+    // Overwrite $card to use first word/num.
+    $card = $cardArray[0];
 
-        $cardArray = explode(' ', $card);
-
-        switch ($cardArray[0]) {
-            case 'Ace':
-                
-                // Refactor to ternary.
-                if (valueHand($hand) <= 10) {
-                    $value += 11;
-                }
-
-                else {
-                    $value += 1;
-                }
-
-                //$aceValue = (valueHand($hand) <= 10) ? $aceValue += 11 : $aceValue += 1 ;
-                echo "$aceValue" . PHP_EOL;
-
-                break;
-
-            case 'King':
-                $value += 10;
-                break;
-            
-            case 'Queen':
-                $value += 10;
-                break;
-
-            case 'Jack':
-                $value += 10;
-                break;
-
-            case 'King':
-                $value += 10;
-                break;
-
-            default:
-                $value += $card;
-                break;
-        }  // end switch
-    } // end foreach
+    // Use first word/num to establish card value.
+    switch ($card) {
+        case 'King':
+            $value = 10;
+            break;
+        case 'Queen':
+            $value = 10;
+            break;
+        case 'Jack':
+            $value = 10;
+            break;
+        case 'Ace':
+            // Save that for later.
+            break;
+        
+        default:
+            // For every other card, do this.
+            $value = intval($card);
+            break;
+    }
 
     return $value;
 }
 
-// function isAce($card) {
-//     if ($card) {
-//         # code...
-//     }
+
+// // This function will output a player's hand.
+// function echoHand($hand, $hidden = false) {
+
 // }
+
+// This function will calculate the value of a hand.
+function valueHand($hand) {
+
+    // Initialize starting value at zero.
+    $valueHand = 0;
+    
+    // Loop through each card in the hand.
+    foreach ($hand as $card) {
+
+        // Explode card string into array to get first word/num.
+        $cardArray = explode(' ', $card);
+
+        // Switch on first word.
+        switch ($cardArray[0]) {
+            case 'Ace':
+                
+                // Refactor to ternary.
+                if ($valueHand <= 10) {
+                    $valueHand += 11;
+                }
+
+                else {
+                    $valueHand += 1;
+                }
+
+                //$aceValue = (valueHand($hand) <= 10) ? $aceValue += 11 : $aceValue += 1 ;
+                //echo "$aceValue" . PHP_EOL;
+
+                break;
+
+            case 'King':
+                $valueHand += 10;
+                break;
+            
+            case 'Queen':
+                $valueHand += 10;
+                break;
+
+            case 'Jack':
+                $valueHand += 10;
+                break;
+
+            case 'King':
+                $valueHand += 10;
+                break;
+
+            default:
+                $valueHand += intval($card);
+                break;
+        }  // end switch
+    } // end foreach
+
+    return $valueHand;
+}
 
 /* ----------------------------- */
 // Initialize Variables
@@ -109,7 +147,6 @@ for ($i=1; $i <=2 ; $i++) {
 echo "Dealer showing: {$dealerHand[0]}" . PHP_EOL;
 //echo "Value: " . valueHand($dealerHand) . PHP_EOL;
 
-
 // Echo player hand
 echo "You have: " . PHP_EOL;
 foreach ($playerHand as $playerCard) {
@@ -121,13 +158,8 @@ echo "Value: " . valueHand($playerHand) . PHP_EOL;
 // Allow player to "(H)it or (S)tay?" till they bust (exceed 21) or stay
 while ($choice != 'S') {
 
-    // if ($valuePlayerHand > 21) {
-    //     echo "Busted! You have $valuePlayerHand!" . PHP_EOL;
-    //     exit(0);
-    // }
-
     if (valueHand($playerHand) > 21) {
-        echo "Busted!" . PHP_EOL;
+        echo "Player Busted!" . PHP_EOL;
         exit(0);
     }
 
@@ -173,7 +205,7 @@ while (true) {
     }
 
     elseif (valueHand($dealerHand) == 21) {
-        echo "Dealer has: " . valueHand($dealerHand) . " and you have: " . valueHand($playerHand) . ". ";
+        echo "Dealer has " . valueHand($dealerHand) . " and you have " . valueHand($playerHand) . ". ";
         echo "BlackJack! Dealer Wins!" . PHP_EOL;
         exit(0);
     }
@@ -191,15 +223,17 @@ while (true) {
     }
 
     else {
-        // Dealer stays; evaluate against value of player hand
+        
+        // Dealer stays; evaluate against value of player hand.
         if (valueHand($dealerHand) >= valueHand($playerHand)) {
-            echo "Dealer has: " . valueHand($dealerHand) . " and you have: " . valueHand($playerHand) . ". ";
+            echo "Dealer has " . valueHand($dealerHand) . " and you have " . valueHand($playerHand) . ". ";
             echo "Dealer Wins!" . PHP_EOL;
 
             exit(0);
         }
 
         else {
+            echo "Dealer has " . valueHand($dealerHand) . " and you have " . valueHand($playerHand) . ". ";
             echo "You Win!" . PHP_EOL;
             exit(0);
         }
@@ -208,7 +242,8 @@ while (true) {
     sleep(1);
 }
 
-//intval(var)
+
+/* Leftover from prompt; will refactor into comments later. */
 
 // at this point, if the player has more than 21, tell them they busted
 // otherwise, if they have 21, tell them they won (regardless of dealer hand)
