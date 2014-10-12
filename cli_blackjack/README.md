@@ -1,5 +1,7 @@
-## Coding Challenges for Codeup
+# Command Line Interface BlackJack Game
 
-This repo contains solutions to some of the prompts listed here: https://github.com/gocodeup/codeup_challenges/
+You can start the game by running it from the command prompt:
 
-Spoilers Inside!  Don't look if you want to solve the problem on your own.
+> $ php myblackjack.php
+
+Good luck!
