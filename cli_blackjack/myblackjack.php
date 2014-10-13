@@ -33,11 +33,6 @@ function promptUser() {
     return $choice;
 }
 
-// // This function will output a player's hand.
-// function echoHand($hand, $hidden = false) {
-
-// }
-
 // This function will accept a hand of cards and return a sorted hand.
 function sortHand($hand) {
 
@@ -65,61 +60,76 @@ function sortHand($hand) {
         return $hand;
 }
 
+function isAce($card) {
+    $cardArray = explode(' ', $card);
+
+    switch ($cardArray[0]) {
+        case 'Ace':
+            return true;
+            break;
+        
+        default:
+            return false;
+            break;
+    }
+}
+
+function valueCard($card) {
+
+    // Initialize starting value at zero.
+    $valueCard = 0;
+
+    // Explode card string into array to get first word/num.
+    $cardArray = explode(' ', $card);
+
+    // Switch on first word.
+    switch ($cardArray[0]) {
+        case 'Ace':
+            // Do nothing.
+            break;
+
+        case 'King':
+            $valueCard += 10;
+            break;
+        
+        case 'Queen':
+            $valueCard += 10;
+            break;
+
+        case 'Jack':
+            $valueCard += 10;
+            break;
+
+        default:
+            $valueCard += intval($card);
+            break;
+    }
+
+    return $valueCard;
+}
+
 // This function will accept a hand of cards, and return an integer value.
 function valueHand($hand, $firstOnly = false) {
 
-    // What if two aces dealt on the first hand?  Bug found.
-
-    // Sort cards in player's hand, to calculate Ace last.
     $hand = sortHand($hand);
 
-    // Initialize starting value at zero.
+    // Initialize at zero
     $valueHand = 0;
-    
-    // Loop through each card in the hand.
+
     foreach ($hand as $card) {
+        if (isAce($card)) {
+            if ($valueHand < 10) {
+                $valueHand += 11;
+            }
+            else {
+                $valuehand += 1;
+            }
+        }
 
-        // Explode card string into array to get first word/num.
-        $cardArray = explode(' ', $card);
+        else {
+            $valueHand += valueCard($card);
+        }
 
-        // Switch on first word.
-        switch ($cardArray[0]) {
-            case 'Ace':
-            
-                // How to best handle soft/hard hands with Ace value?
-
-                // Refactor to ternary.
-                if ($valueHand <= 10) {
-                    $valueHand += 11;
-                }
-
-                else {
-                    $valueHand += 1;
-                }
-
-                //$aceValue = (valueHand($hand) <= 10) ? $aceValue += 11 : $aceValue += 1 ;
-                //echo "$aceValue" . PHP_EOL;
-
-                break;
-
-            case 'King':
-                $valueHand += 10;
-                break;
-            
-            case 'Queen':
-                $valueHand += 10;
-                break;
-
-            case 'Jack':
-                $valueHand += 10;
-                break;
-
-            default:
-                $valueHand += intval($card);
-                break;
-        }  // end switch
-
-        // If first only is true, then return after the first iteration.
         if ($firstOnly === true) {
             return $valueHand;    
         }
