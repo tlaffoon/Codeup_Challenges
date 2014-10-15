@@ -163,12 +163,36 @@ function showHand($hand, $firstOnly = false) {
     }
 }
 
-function playerWins($hand, $blackjack = false) {
-    // ...
-}
+function roundOver($dealerHand, $playerHand, $winner, $blackjack = false) {
 
-function dealerWins($hand, $blackjack = false) {
-    // ...
+    if ($winner == 'dealer') {
+        $string .= "Dealer has " . showHand($dealerHand) . PHP_EOL;
+        $string .= "You have " . showHand($playerHand) . PHP_EOL;
+        $string .= "Dealer Wins!" . PHP_EOL;
+        return $string;
+    }
+
+    elseif ($winner == 'player') {
+        $string .= "Dealer has " . showHand($dealerHand) . PHP_EOL;
+        $string .= "You have " . showHand($playerHand) . PHP_EOL;
+        $string .= "You Win!" . PHP_EOL;
+        return $string;
+    }
+
+    elseif ($winner == 'dealer' && $blackjack == true) {
+        echo "Dealer has " . showHand($dealerHand) . PHP_EOL;
+        echo "You have " . showHand($playerHand) . PHP_EOL;
+        echo "Blackjack! Dealer wins!" . PHP_EOL;
+        return $string;
+    }
+
+    elseif ($winner == 'player' && $blackjack == true) {
+        echo "Dealer has " . showHand($dealerHand) . PHP_EOL;
+        echo "You have " . showHand($playerHand) . PHP_EOL;
+        echo "Blackjack! You win!" . PHP_EOL;
+        return $string;
+    }
+
 }
 
 /* ----------------------------- */
@@ -211,10 +235,12 @@ while (true) {
         exit(0);
     }
 
+    // Player Blackjack
     elseif (valueHand($playerHand) === 21 && valueHand($dealerHand) !== 21) {
-        echo "Dealer has " . showHand($dealerHand) . PHP_EOL;
-        echo "You have " . showHand($playerHand) . PHP_EOL;
-        echo "Blackjack! You win!" . PHP_EOL;
+        echo roundOver($dealerHand, $playerHand, 'player', true);
+        // echo "Dealer has " . showHand($dealerHand) . PHP_EOL;
+        // echo "You have " . showHand($playerHand) . PHP_EOL;
+        // echo "Blackjack! You win!" . PHP_EOL;
         exit(0);
     }
 
@@ -236,7 +262,7 @@ while (true) {
             // Add One Card
             $playerHand[] = array_pop($deck);
 
-            sleep(2);
+            sleep(1);
             break;
 
         case 'S':
@@ -260,18 +286,16 @@ while (true) {
     // Show dealer's hand.
     echo "Dealer has " . showHand($dealerHand) . PHP_EOL;
 
-    // If dealer has greater than 21; bust.
+    // If dealer has greater than 21; dealer bust.
     if (valueHand($dealerHand) > 21) {
-        //echo "Dealer has " . showHand($dealerHand) . PHP_EOL;
+        echo "Dealer has " . showHand($dealerHand) . PHP_EOL;
         echo "Dealer Busted! You win!" . PHP_EOL;
         exit(0);
     }
 
     // If dealer has 21; dealer wins.
     elseif (valueHand($dealerHand) === 21) {
-        //echo "Dealer has " . showHand($dealerHand) . PHP_EOL;
-        echo "You have " . showHand($playerHand) . PHP_EOL;
-        echo "BlackJack! Dealer Wins!" . PHP_EOL;
+        echo roundOver($dealerHand, $playerHand, 'dealer', true);
         exit(0);
     }
 
@@ -289,42 +313,32 @@ while (true) {
         break;
     }
 
-    sleep(2);
+    sleep(1);
 }
-
-
 
 // Perform separate loop to check scores and determine round outcome.  Cleaner.
 echo exec('clear');
 
 // If dealer has more points, dealer wins regardless of card count.
 if (valueHand($dealerHand) > valueHand($playerHand)) {
-    echo "Dealer has " . showHand($dealerHand) . PHP_EOL;
-    echo "You have " . showHand($playerHand) . PHP_EOL;
-    echo "Dealer Wins!" . PHP_EOL;
+    echo roundOver($dealerHand, $playerHand, 'dealer');
     exit(0);
 }
 // If score is equal, and dealer has equal or greater cards, dealer wins.
 elseif (valueHand($dealerHand) === valueHand($playerHand)) {
     if (count($dealerHand) >= count($playerHand)) {
-        echo "Dealer has " . showHand($dealerHand) . PHP_EOL;
-        echo "You have " . showHand($playerHand) . PHP_EOL;
-        echo "Dealer Wins!" . PHP_EOL;
+        echo roundOver($dealerHand, $playerHand, 'dealer');
         exit(0);
     }
     // Otherwise player wins.
     else {
-        echo "Dealer has " . showHand($dealerHand) . PHP_EOL;
-        echo "You have " . showHand($playerHand) . PHP_EOL;
-        echo "You Win!" . PHP_EOL;
+        echo roundOver($dealerHand, $playerHand, 'player');
         exit(0);
     }
 }
-
+// If player hand greater than dealer, player wins.
 elseif (valueHand($playerHand) > valueHand($dealerHand)) {
-    echo "Dealer has " . showHand($dealerHand) . PHP_EOL;
-    echo "You have " . showHand($playerHand) . PHP_EOL;
-    echo "You Win!" . PHP_EOL;
+    echo roundOver($dealerHand, $playerHand, 'player');
     exit(0);
 }
 
