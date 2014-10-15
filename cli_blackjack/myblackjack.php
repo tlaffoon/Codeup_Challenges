@@ -238,9 +238,6 @@ while (true) {
     // Player Blackjack
     elseif (valueHand($playerHand) === 21 && valueHand($dealerHand) !== 21) {
         echo roundOver($dealerHand, $playerHand, 'player', true);
-        // echo "Dealer has " . showHand($dealerHand) . PHP_EOL;
-        // echo "You have " . showHand($playerHand) . PHP_EOL;
-        // echo "Blackjack! You win!" . PHP_EOL;
         exit(0);
     }
 
