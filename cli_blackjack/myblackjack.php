@@ -330,19 +330,6 @@ elseif (valueHand($playerHand) > valueHand($dealerHand)) {
 
 // end round.
 
-
-// Looks like aces not evaluating correctly sometimes?
-
-// Dealer has 3 of Diamonds, Queen of Spades and 5 of Diamonds. (18)
-// You have Queen of Clubs and Ace of Clubs. (10)
-// Dealer Wins!
-
-// You have King of Spades, 4 of Clubs and 7 of Spades. (21)
-// (H)it or (S)tay? S
-// Dealer has Queen of Spades and Ace of Diamonds. (10)
-// Dealer draws the 10 of Diamonds.
-// Dealer has Queen of Spades, 10 of Diamonds and Ace of Diamonds. (20)
-
 /* Leftover from prompt; will refactor into comments later. */
 
 // at this point, if the player has more than 21, tell them they busted
