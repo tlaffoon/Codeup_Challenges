@@ -61,6 +61,7 @@ function sortHand($hand) {
 }
 
 function isAce($card) {
+
     $cardArray = explode(' ', $card);
 
     switch ($cardArray[0]) {
@@ -111,18 +112,16 @@ function valueCard($card) {
 // This function will accept a hand of cards, and return an integer value.
 function valueHand($hand, $firstOnly = false) {
 
-    $hand = sortHand($hand);
-
     // Initialize at zero
     $valueHand = 0;
 
     foreach ($hand as $card) {
         if (isAce($card)) {
-            if ($valueHand < 10) {
+            if ($valueHand <= 10) {
                 $valueHand += 11;
             }
             else {
-                $valuehand += 1;
+                $valueHand += 1;
             }
         }
 
@@ -164,6 +163,14 @@ function showHand($hand, $firstOnly = false) {
     }
 }
 
+function playerWins($hand, $blackjack = false) {
+    // ...
+}
+
+function dealerWins($hand, $blackjack = false) {
+    // ...
+}
+
 /* ----------------------------- */
 // Initialize Variables
 
@@ -189,8 +196,10 @@ echo "Dealer showing: {$dealerHand[0]}" . PHP_EOL;
 // Echo player hand
 echo "You have " . showHand($playerHand) . PHP_EOL;
 
-// Allow player to "(H)it or (S)tay?" till they bust (exceed 21) or stay
+// Allow player to "(H)it or (S)tay?" till they bust (exceed 21) or stay.
 while (true) {
+
+    $playerHand = sortHand($playerHand);
 
     // Clear screen
     echo exec('clear');
@@ -227,7 +236,7 @@ while (true) {
             // Add One Card
             $playerHand[] = array_pop($deck);
 
-            sleep(1);
+            sleep(2);
             break;
 
         case 'S':
@@ -235,60 +244,104 @@ while (true) {
         
         default:
             echo "Please enter a valid choice." . PHP_EOL;
-            sleep(1);
+            sleep(2);
             break;
     }
 }
 
-// show the dealer's hand (all cards)
+// Show the dealer's hand (all cards)
 while (true) {
+
+    $dealerHand = sortHand($dealerHand);
 
     // Clear screen
     echo exec('clear');
 
+    // Show dealer's hand.
+    echo "Dealer has " . showHand($dealerHand) . PHP_EOL;
+
     // If dealer has greater than 21; bust.
     if (valueHand($dealerHand) > 21) {
-        echo "Dealer has " . showHand($dealerHand) . PHP_EOL;
+        //echo "Dealer has " . showHand($dealerHand) . PHP_EOL;
         echo "Dealer Busted! You win!" . PHP_EOL;
         exit(0);
     }
 
     // If dealer has 21; dealer wins.
-    elseif (valueHand($dealerHand) == 21) {
-        echo "Dealer has " . showHand($dealerHand) . PHP_EOL;
+    elseif (valueHand($dealerHand) === 21) {
+        //echo "Dealer has " . showHand($dealerHand) . PHP_EOL;
         echo "You have " . showHand($playerHand) . PHP_EOL;
         echo "BlackJack! Dealer Wins!" . PHP_EOL;
         exit(0);
     }
 
     elseif (valueHand($dealerHand) < 17) {
+
+        // Fun output!
+        echo "Dealer draws the " . end($deck) . "." . PHP_EOL;
+
         // Add one card to dealer's hand
         $dealerHand[] = array_pop($deck);
-        // Show dealer's hand.
-        echo "Dealer has " . showHand($dealerHand) . PHP_EOL;
     }
 
     else {
-
-        if (valueHand($dealerHand) >= valueHand($playerHand) && count($dealerHand) >= count($playerHand)) {
-            echo "Dealer has " . showHand($dealerHand) . PHP_EOL;
-            echo "You have " . showHand($playerHand) . PHP_EOL;
-            echo "Dealer Wins!" . PHP_EOL;
-
-            exit(0);
-        }
-
-        else {
-            echo "Dealer has " . showHand($dealerHand) . PHP_EOL;
-            echo "You have " . showHand($playerHand) . PHP_EOL;
-            echo "You Win!" . PHP_EOL;
-            exit(0);
-        }
+        //echo "Breakin' out." . PHP_EOL;
+        break;
     }
 
-    sleep(1);
+    sleep(2);
 }
 
+
+
+// Perform separate loop to check scores and determine round outcome.  Cleaner.
+echo exec('clear');
+
+// If dealer has more points, dealer wins regardless of card count.
+if (valueHand($dealerHand) > valueHand($playerHand)) {
+    echo "Dealer has " . showHand($dealerHand) . PHP_EOL;
+    echo "You have " . showHand($playerHand) . PHP_EOL;
+    echo "Dealer Wins!" . PHP_EOL;
+    exit(0);
+}
+// If score is equal, and dealer has equal or greater cards, dealer wins.
+elseif (valueHand($dealerHand) === valueHand($playerHand)) {
+    if (count($dealerHand) >= count($playerHand)) {
+        echo "Dealer has " . showHand($dealerHand) . PHP_EOL;
+        echo "You have " . showHand($playerHand) . PHP_EOL;
+        echo "Dealer Wins!" . PHP_EOL;
+        exit(0);
+    }
+    // Otherwise player wins.
+    else {
+        echo "Dealer has " . showHand($dealerHand) . PHP_EOL;
+        echo "You have " . showHand($playerHand) . PHP_EOL;
+        echo "You Win!" . PHP_EOL;
+        exit(0);
+    }
+}
+
+elseif (valueHand($playerHand) > valueHand($dealerHand)) {
+    echo "Dealer has " . showHand($dealerHand) . PHP_EOL;
+    echo "You have " . showHand($playerHand) . PHP_EOL;
+    echo "You Win!" . PHP_EOL;
+    exit(0);
+}
+
+// end round.
+
+
+// Looks like aces not evaluating correctly sometimes?
+
+// Dealer has 3 of Diamonds, Queen of Spades and 5 of Diamonds. (18)
+// You have Queen of Clubs and Ace of Clubs. (10)
+// Dealer Wins!
+
+// You have King of Spades, 4 of Clubs and 7 of Spades. (21)
+// (H)it or (S)tay? S
+// Dealer has Queen of Spades and Ace of Diamonds. (10)
+// Dealer draws the 10 of Diamonds.
+// Dealer has Queen of Spades, 10 of Diamonds and Ace of Diamonds. (20)
 
 /* Leftover from prompt; will refactor into comments later. */
 
