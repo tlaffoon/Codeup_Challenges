@@ -165,14 +165,14 @@ function showHand($hand, $firstOnly = false) {
 
 function roundOver($dealerHand, $playerHand, $winner, $blackjack = false) {
 
-    if ($winner == 'dealer') {
+    if ($winner == 'dealer' && $blackjack == false) {
         $string .= "Dealer has " . showHand($dealerHand) . PHP_EOL;
         $string .= "You have " . showHand($playerHand) . PHP_EOL;
         $string .= "Dealer Wins!" . PHP_EOL;
         return $string;
     }
 
-    elseif ($winner == 'player') {
+    elseif ($winner == 'player' && $blackjack == false) {
         $string .= "Dealer has " . showHand($dealerHand) . PHP_EOL;
         $string .= "You have " . showHand($playerHand) . PHP_EOL;
         $string .= "You Win!" . PHP_EOL;
@@ -279,9 +279,6 @@ while (true) {
 
     // Clear screen
     echo exec('clear');
-
-    // Show dealer's hand.
-    echo "Dealer has " . showHand($dealerHand) . PHP_EOL;
 
     // If dealer has greater than 21; dealer bust.
     if (valueHand($dealerHand) > 21) {
