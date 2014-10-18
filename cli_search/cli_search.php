@@ -96,7 +96,13 @@ function search($filename = './data/filter_input.txt') {
 				break;
 		}
 
-	return "Search completed with {$count} results." . PHP_EOL;
+		if ($count > 0) {
+			return "Search completed with {$count} results." . PHP_EOL;
+		}
+
+		else {
+			return "Search completed.  No matching results." . PHP_EOL;
+		}
 }
 
 
