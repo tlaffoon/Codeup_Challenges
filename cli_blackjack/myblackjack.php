@@ -223,6 +223,7 @@ echo "You have " . showHand($playerHand) . PHP_EOL;
 // Allow player to "(H)it or (S)tay?" till they bust (exceed 21) or stay.
 while (true) {
 
+    // Sort cards
     $playerHand = sortHand($playerHand);
 
     // Clear screen
